@@ -1,3 +1,8 @@
+''''
+Creating a neural network program that automatically generates code for other neural networks is known as Neural Architecture Search (NAS). You can achieve this by using specialized automated machine learning (AutoML) libraries or by implementing a search algorithm from scratch.
+1. Using Automated Libraries (AutoML)
+Libraries like AutoKeras or NePS (Neural Pipeline Search) automate the design process by searching for the optimal architecture for your specific dataset.
+''''
 import autokeras as ak
 import tensorflow as tf
 
@@ -14,9 +19,12 @@ clf.fit(x_train, y_train, epochs=2)
 model = clf.export_model()
 model.summary()
 
-#####$$#
+''''
 
+2. Manual Architecture Search (Genetic Algorithm)
+You can write a program that uses a Genetic Algorithm to "evolve" neural network code by trying different layer combinations and keeping the best ones.
 
+''''
 import random
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -41,6 +49,14 @@ for i in range(5):
     arch_code = generate_random_architecture()
     print(f"Trial {i+1}: Generating NN with layers: {arch_code}")
     model = build_model_from_code(arch_code)
+'''
+
+Key Python Libraries for Automation
+AutoKeras: A high-level library that simplifies NAS for beginners.
+NePS (Neural Pipeline Search): A flexible library for hyperparameter optimization and architecture search.
+NNablaNAS: A Sony-developed framework for hardware-aware neural architecture search.
+Vertex AI NAS: A high-end Google Cloud tool for searching billions of possible architectures.
+'''
 
 '''
 
