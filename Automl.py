@@ -41,3 +41,60 @@ for i in range(5):
     arch_code = generate_random_architecture()
     print(f"Trial {i+1}: Generating NN with layers: {arch_code}")
     model = build_model_from_code(arch_code)
+
+'''
+
+Creating a neural network that automatically generates neural network code is a core component of Neural Architecture Search (NAS). This can be achieved by building a "Controller" (often a Recurrent Neural Network or RL agent) that outputs sequences representing model architectures, which are then parsed into executable Python code.
+1. The Controller (The "Automator")
+This script uses a simple logic to randomly generate a neural network's architecture (layers, neurons, activations) and then writes that architecture as a functional Python file using Keras/TensorFlow.
+'''
+
+import random
+
+def generate_nn_code(filename="generated_model.py"):
+    # Define potential building blocks
+    layers = [random.randint(32, 512) for _ in range(random.randint(1, 5))]
+    activations = ['relu', 'sigmoid', 'tanh']
+    
+    # Generate the Python code string
+    code = [
+        "import tensorflow as tf",
+        "from tensorflow.keras import layers, models\n",
+        "def create_model(input_shape):",
+        "    model = models.Sequential()"
+    ]
+    
+    # Automatically add layers based on random search
+    for i, units in enumerate(layers):
+        act = random.choice(activations)
+        if i == 0:
+            code.append(f"    model.add(layers.Dense({units}, activation='{act}', input_shape=input_shape))")
+        else:
+            code.append(f"    model.add(layers.Dense({units}, activation='{act}'))")
+            
+    code.append("    model.add(layers.Dense(1, activation='sigmoid')) # Final Output")
+    code.append("    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])")
+    code.append("    return model")
+    
+    # Save to file
+    with open(filename, "w") as f:
+        f.write("\n".join(code))
+    print(f"Successfully generated neural network code in {filename}")
+
+# Run the generator
+generate_nn_code()
+
+'''
+2. High-Level Automation Libraries
+Instead of writing a generator from scratch, you can use specialized Python libraries designed for Automated Machine Learning (AutoML) and NAS:
+NASLib: A modular library that provides interfaces for state-of-the-art search spaces and optimizers.
+PyGAD: Uses genetic algorithms to evolve neural network weights and architectures automatically.
+Neural Pipeline Search (NePS): A powerful library for hyperparameter optimization and neural architecture search.
+NablaNAS: A framework specifically for hardware-aware neural architecture search.
+3. Key Concepts for Advanced Automation
+Search Strategy: You can use Reinforcement Learning (where an agent is rewarded for generating accurate models) or Evolutionary Algorithms (where models "mutate" and "cross over" based on fitness).
+Controller Training: In advanced setups, a recurrent neural network (RNN) serves as the controller, predicting tokens that represent layer types and hyperparameters.
+Evaluation: The generated code must be automatically executed (often using exec() or by importing the generated module) to evaluate its performance on a validation set.
+
+
+'''
